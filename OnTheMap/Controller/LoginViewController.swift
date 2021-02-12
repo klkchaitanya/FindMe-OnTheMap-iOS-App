@@ -10,15 +10,15 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
-    @IBOutlet weak var signupLabel: UILabel!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var usernameTextField: UITextField!
+    @IBOutlet weak var signUpButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     @IBAction func login(_ sender: Any) {
         print("Login")
-        usernameTextField.text = "chay.koravi@gmail.com"
-        passwordTextField.text = "chaitusxperiaG0"
+        updateUI(login: true)
         UdacityClient.login(username: usernameTextField.text ?? "", password: passwordTextField.text ?? "", completion: handleLoginResponse(success:error:))
     }
     
@@ -28,27 +28,50 @@ class LoginViewController: UIViewController {
     
     func handleLoginResponse(success: Bool, error: Error?) {
         let FUNC_TAG = "handleLoginResponse"
+        updateUI(login: false)
         if success {
             print("success: ", success)
+            clearText()
             performSegue(withIdentifier: "RegularLogin", sender: nil)
             //TMDBClient.createSessionId(completion: handleSessionResponse(success:error:))
         } else {
-            print(FUNC_TAG, " Error: ", error)
-            showLoginFailure(message: error?.localizedDescription ?? "")
+            print(FUNC_TAG, " Error: ", error.debugDescription)
+            showAlert(title: "Login Failed", message: error?.localizedDescription ?? "")
         }
-    }
-    
-    func showLoginFailure(message: String) {
-        let alertVC = UIAlertController(title: "Login Failed", message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        show(alertVC, sender: nil)
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        updateUI(login: false)
     }
+    
+    func updateUI(login: Bool){
+        
+        DispatchQueue.main.async {
+
+        if(login){
+            self.activityIndicator.startAnimating()
+        }else{
+            self.activityIndicator.stopAnimating()
+        }
+        
+        self.activityIndicator.isHidden = !login
+        self.usernameTextField.isEnabled = !login
+        self.passwordTextField.isEnabled = !login
+        self.loginButton.isEnabled = !login
+        self.signUpButton.isEnabled = !login
+            
+        }
+        
+    }
+    
+    func clearText(){
+        usernameTextField.text = ""
+        passwordTextField.text = ""
+    }
+    
 
 
 }

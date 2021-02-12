@@ -71,10 +71,10 @@ class func postStudentLocation(information: StudentLocationInformation, completi
 }
     
 class func putStudentLocation(information: StudentLocationInformation, completion: @escaping (Bool, Error?)->Void){
-        //Update existing student location.
-        ///ParseClient.putStudentLocation(studentLocInfo: studentLocInfo, completion: completion)
+    //Update existing student location.
     print("putStudentLocation")
     print("student information: ", information)
+    
     let body = "{\"uniqueKey\": \"\(information.uniqueKey ?? "")\", \"firstName\": \"\(information.firstName)\", \"lastName\": \"\(information.lastName)\",\"mapString\": \"\(information.mapString ?? "")\", \"mediaURL\": \"\(information.mediaURL ?? "")\",\"latitude\": \(information.latitude ?? 0.0), \"longitude\": \(information.longitude ?? 0.0)}"
 
     taskForPostRequest(url: Endpoints.putStudentLocation.url, responseType: PutLocationResponse.self, body: body, httpMethod: "PUT"){

@@ -91,9 +91,14 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
-            let app = UIApplication.shared
-            if let toOpen = view.annotation?.subtitle! {
-                app.openURL(URL(string: toOpen)!)
+            if let website = view.annotation?.subtitle! {
+                guard let url = URL(string: website), UIApplication.shared.canOpenURL(url) else{
+                    self.showAlert(title: "Invalid URL", message: "Cannot open website because of invalid url")
+                    return
+                }
+                UIApplication.shared.openURL(URL(string: website)!)
+            }else{
+                self.showAlert(title: "Invalid URL", message: "Cannot open website because of invalid url")
             }
         }
     }

@@ -60,25 +60,18 @@ class TableViewController: UITableViewController{
         let cell = tableView.dequeueReusableCell(withIdentifier: "StudentLocationCell", for: indexPath) as! TableViewCell
         let student = self.studentLocations[indexPath.row]
         cell.studentNameLabel?.text = "\(student.firstName)" + " " + "\(student.lastName)"
-        ///cell.detailTextLabel?.text = "\(student.mediaURL ?? "")"
+        cell.studentLocationLabel?.text = "\(student.mediaURL ?? "")"
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let student = self.studentLocations[indexPath.row]
-        var toOpen = student.mediaURL ?? ""
-        if(toOpen == ""){
-            showAlert(message: "This subject has no website setup!", title: "Unable to open URL")
-        }else{
-        UIApplication.shared.openURL(URL(string: toOpen)!)
+        var website = student.mediaURL ?? ""
+        guard let url = URL(string: website), UIApplication.shared.canOpenURL(url) else{
+            self.showAlert(title: "Invalid URL", message: "Cannot open website because of invalid url")
+            return
         }
+        UIApplication.shared.openURL(URL(string: website)!)
         
-    }
-    
-    
-    func showAlert(message: String, title: String) {
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alertVC, animated: true)
     }
 }

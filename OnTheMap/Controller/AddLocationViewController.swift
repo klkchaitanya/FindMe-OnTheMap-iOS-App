@@ -15,25 +15,33 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate{
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var websiteTextField: UITextField!
     @IBOutlet weak var findLocation: UIButton!
+    @IBOutlet weak var geocodeActivityIndicator: UIActivityIndicatorView!
     var objectId: String?
+    
+    override func viewDidLoad() {
+        updateUI(geocoding: false)
+    }
     
     @IBAction func cancelAddLocationClick(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func findLocationClick(_ sender: Any) {
-        locationTextField.text = "Chicago, Illinois"
-        websiteTextField.text = "https://www.udacity.com"
-        print(locationTextField.text!)
-        self.geocodePosition(newLocation: locationTextField.text!)
+        if(websiteTextField.text == ""){
+            showAlert(title: "Website URL not found!", message: "Website URL is found empty. Please enter the website URL..")
+        }else{
+            updateUI(geocoding: true)
+            self.geocodePosition(newLocation: locationTextField.text!)
+        }
     }
     
     private func geocodePosition(newLocation: String) {
         CLGeocoder().geocodeAddressString(newLocation) {
             (newMarker, error) in
             if let error = error {
-                self.showLocationNotFound(message: error.localizedDescription, title: "Location not found")
+                self.showAlert(title: "Location not found!", message: error.localizedDescription)
                 print("Location not found.")
+                self.updateUI(geocoding: false)
             }
             else{
                 var location: CLLocation?
@@ -44,9 +52,11 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate{
                 
                 if let location = location {
                     self.loadNewLocation(location.coordinate)
+                    self.updateUI(geocoding: false)
                 } else {
-                    self.showLocationNotFound(message: "Please try again later!", title: "Error")
+                    self.showAlert(title: "Error", message: "Problem loading location. Please try again later!")
                     print("There was an error.")
+                    self.updateUI(geocoding: false)
                 }
             }
         }
@@ -79,10 +89,18 @@ class AddLocationViewController: UIViewController, UITextFieldDelegate{
         
     }
     
-    func showLocationNotFound(message: String, title: String) {
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        show(alertVC, sender: nil)
+    func updateUI(geocoding: Bool){
+        DispatchQueue.main.async {
+            self.geocodeActivityIndicator.isHidden = !geocoding
+            if(geocoding){
+                self.geocodeActivityIndicator.startAnimating()
+            }else{
+                self.geocodeActivityIndicator.stopAnimating();
+            }
+            self.locationTextField.isEnabled = !geocoding
+            self.websiteTextField.isEnabled = !geocoding
+            self.findLocation.isEnabled = !geocoding
+        }
     }
     
     

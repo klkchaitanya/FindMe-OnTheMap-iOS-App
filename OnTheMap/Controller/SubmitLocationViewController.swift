@@ -68,7 +68,7 @@ class SubmitLocationViewController: UIViewController {
                         } else {
                             DispatchQueue.main.async {
                                 print("Error updating student location..!", error.debugDescription)
-                                self.showAlert(message: error?.localizedDescription ?? "", title: "Error")
+                                self.showAlert(title: "Error", message: error?.localizedDescription ?? "")
                             }
                         }
                     }
@@ -87,18 +87,13 @@ class SubmitLocationViewController: UIViewController {
             print("Student Location Information is empty")
         }
     }
-    
-    func showAlert(message: String, title: String) {
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alertVC, animated: true)
-    }
+
     
     private func showLocations(location: StudentLocation) {
         mkMapView.removeAnnotations(mkMapView.annotations)
         if let coordinate = extractCoordinate(location: location) {
             let annotation = MKPointAnnotation()
-            //annotation.title = location.locationLabel
+            annotation.title = location.mapString
             annotation.subtitle = location.mediaURL ?? ""
             annotation.coordinate = coordinate
             mkMapView.addAnnotation(annotation)
@@ -112,4 +107,6 @@ class SubmitLocationViewController: UIViewController {
         }
         return nil
     }
+
+
 }

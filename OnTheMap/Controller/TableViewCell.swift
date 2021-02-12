@@ -11,4 +11,5 @@ import UIKit
 
 class TableViewCell: UITableViewCell{
     @IBOutlet weak var studentNameLabel: UILabel!
+    @IBOutlet weak var studentLocationLabel: UILabel!
 }

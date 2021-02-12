@@ -41,7 +41,6 @@ class UdacityClient{
     
     class func login(username: String, password:String, completion: @escaping (Bool, Error?)->Void){
         let FUNC_TAG = "login"
-        //let udacityBody = Udacity(username: username, password: password)
         let body = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}"
         taskForPostRequest(url: Endpoints.login.url, responseType: LoginResponse.self, body: body){
             (response, error) in
@@ -57,6 +56,7 @@ class UdacityClient{
                 })
                 completion(true, nil)
             }else{
+                print(FUNC_TAG, error)
                 completion(false, error)
             }
             
