@@ -42,7 +42,11 @@ class MapViewController: UIViewController, MKMapViewDelegate{
     func getStudentLocations(){
         ParseClient.getStudentLocations(){
             (locationResults, error) in
-
+            guard let results = locationResults else{
+                self.showAlert(title: "Problem getting student locations!", message: error?.localizedDescription ?? "")
+                return
+            }
+            
             self.mkMapView.removeAnnotations(self.annotations)
             self.annotations.removeAll()
             self.studentLocations = locationResults ?? []

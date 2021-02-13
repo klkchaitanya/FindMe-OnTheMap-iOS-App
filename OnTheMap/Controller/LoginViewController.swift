@@ -18,8 +18,12 @@ class LoginViewController: UIViewController {
     
     @IBAction func login(_ sender: Any) {
         print("Login")
+        if(usernameTextField.text == "" || passwordTextField.text == ""){
+            self.showAlert(title: "Invalid Email or password!", message: "Please enter valid email and password.")
+        }else{
         updateUI(login: true)
         UdacityClient.login(username: usernameTextField.text ?? "", password: passwordTextField.text ?? "", completion: handleLoginResponse(success:error:))
+        }
     }
     
     @IBAction func signUpClick(_ sender: Any) {

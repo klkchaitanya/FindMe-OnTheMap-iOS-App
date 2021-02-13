@@ -41,6 +41,10 @@ class TableViewController: UITableViewController{
     func getStudentLocations(){
         ParseClient.getStudentLocations(){
             (locationResults, error) in
+            guard let results = locationResults else{
+                self.showAlert(title: "Problem getting student locations!", message: error?.localizedDescription ?? "")
+                return
+            }
             self.studentLocations = locationResults ?? []
             DispatchQueue.main.async {
                 self.tableView.reloadData()

@@ -52,6 +52,7 @@ class SubmitLocationViewController: UIViewController {
                     }else{
                         DispatchQueue.main.async {
                             print("Error posting student location..!", error.debugDescription)
+                            self.showAlert(title: "Error posting student location!", message: error?.localizedDescription ?? "")
                         }
                     }
                 }
@@ -68,7 +69,7 @@ class SubmitLocationViewController: UIViewController {
                         } else {
                             DispatchQueue.main.async {
                                 print("Error updating student location..!", error.debugDescription)
-                                self.showAlert(title: "Error", message: error?.localizedDescription ?? "")
+                                self.showAlert(title: "Error updating student location!", message: error?.localizedDescription ?? "")
                             }
                         }
                     }
